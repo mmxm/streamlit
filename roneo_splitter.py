@@ -5,7 +5,7 @@ from zipfile import ZipFile
 st.title("Ronéo splitter")
 prefix = st.text_input('Prefix', 'S1_R2_')
 uploaded_file = st.file_uploader("Choose a file")
-if uploaded_file is not None:
+if uploaded_file is not None and st.button('Start parsing')== True:
     reader = PdfReader(uploaded_file)
     text = ""
     i = 0
@@ -25,11 +25,13 @@ if uploaded_file is not None:
                 # title = re.sub("\-", " ", title)
                 title = re.sub("\s{2,}", " ", title)
                 title = title[0:60]
-                st.write(title)
-                titles.append(title)
-                subdocs.append(PdfFileWriter())
+
             else:
-                st.write("title not found")
+                title = "unknown"
+                st.write(f"Title not found: {text.splitlines()[0]}")
+            st.write(title)
+            subdocs.append(PdfFileWriter())
+            titles.append(title)
 
         subdocs[i].addPage(page)
     zipObj = ZipFile('output.zip', 'w')
